@@ -114,6 +114,12 @@
             "expr": "COUNT(*)",
             "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
             "displayName": "Count"
+          },
+          {
+            "name": "avg_selling_price",
+            "expr": "SUM(source.total_amount_inr) / SUM(source.sold_quantity)",
+            "comment": "Average selling price calculated as total revenue divided by total quantity",
+            "displayName": "Average Selling Price"
           }
         ]
       }
@@ -181,7 +187,6 @@
               }
             ],
             "spec": {
-              "version": 2,
               "frame": {
                 "showTitle": true,
                 "title": "Total Revenue"
@@ -191,10 +196,20 @@
                   "dark": "#000000"
                 }
               },
+              "version": 2,
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(total_amount_inr)"
+                  "fieldName": "sum(total_amount_inr)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 2
+                    }
+                  },
+                  "formatTemplate": "₹{{ @formatted }}"
                 }
               },
               "data": {
@@ -204,9 +219,6 @@
             "specExtensions": {
               "widgetBackgroundColor": {
                 "dark": "#46CABF"
-              },
-              "widgetBorderColor": {
-                "dark": "#000000"
               }
             }
           },
@@ -236,20 +248,28 @@
               }
             ],
             "spec": {
-              "version": 2,
-              "frame": {
-                "showTitle": true,
-                "title": "Total Quantity Sold"
-              },
               "style": {
                 "fontColor": {
                   "dark": "#000000"
                 }
               },
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Quantity Sold"
+              },
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(sold_quantity)"
+                  "fieldName": "sum(sold_quantity)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 2
+                    }
+                  }
                 }
               },
               "data": {
@@ -258,9 +278,6 @@
             },
             "specExtensions": {
               "widgetBackgroundColor": {
-                "dark": "#46CABF"
-              },
-              "widgetBorderColor": {
                 "dark": "#46CABF"
               }
             }
@@ -592,8 +609,8 @@
                   "datasetName": "67181484",
                   "fields": [
                     {
-                      "name": "avg(price_inr)",
-                      "expression": "AVG(`price_inr`)"
+                      "name": "measure(avg_selling_price)",
+                      "expression": "MEASURE(`avg_selling_price`)"
                     }
                   ],
                   "disaggregated": false
@@ -601,7 +618,6 @@
               }
             ],
             "spec": {
-              "version": 2,
               "frame": {
                 "showTitle": true,
                 "title": "Average Selling Price"
@@ -611,10 +627,20 @@
                   "dark": "#000000"
                 }
               },
+              "version": 2,
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "avg(price_inr)"
+                  "fieldName": "measure(avg_selling_price)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    }
+                  },
+                  "formatTemplate": "₹{{ @formatted }}"
                 }
               },
               "data": {
@@ -624,9 +650,6 @@
             "specExtensions": {
               "widgetBackgroundColor": {
                 "dark": "#46CABF"
-              },
-              "widgetBorderColor": {
-                "dark": "#000000"
               }
             }
           },
@@ -771,16 +794,21 @@
                       "expression": "`channel`"
                     }
                   ],
+                  "filters": [
+                    {
+                      "expression": "`channel` IS NOT NULL"
+                    }
+                  ],
                   "disaggregated": false
                 }
               }
             ],
             "spec": {
-              "version": 3,
               "frame": {
                 "showTitle": true,
                 "title": "Revenue Share by Channel"
               },
+              "version": 3,
               "widgetType": "pie",
               "encodings": {
                 "angle": {
@@ -972,11 +1000,11 @@
               }
             ],
             "spec": {
+              "version": 2,
               "frame": {
                 "showTitle": true,
-                "title": "Bar 7"
+                "title": "Top Customers by Revenue"
               },
-              "version": 2,
               "widgetType": "table",
               "encodings": {
                 "columns": [
